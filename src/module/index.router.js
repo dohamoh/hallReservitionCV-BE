@@ -1,6 +1,6 @@
-import authRouter from './auth/auth.routes.js'
- 
+import authRouter from './auth/auth.routes.js'   
+import hallRouter from './hallControl/hall.routes.js'   
 
 export{
-    authRouter,
+    authRouter,hallRouter
 }

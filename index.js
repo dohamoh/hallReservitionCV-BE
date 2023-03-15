@@ -15,6 +15,7 @@ const port = 3000
 app.use(express.json())
 
 app.use('/auth', indexRouter.authRouter)
+app.use('/hall', indexRouter.hallRouter)
 
 app.get('/', (req, res) => res.send('hall reversion!'))
 app.use('*', (req, res, next) => {

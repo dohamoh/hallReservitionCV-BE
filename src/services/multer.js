@@ -1,8 +1,8 @@
 import multer from "multer";
 
 export const fileValidation = {
-    image: ['image/png', 'image/jpeg', 'image/jif','image/webp'],
-    pdf: ['application/pdf'],
+    type: ['image/png', 'image/jpeg', 'image/jif','image/webp','application/pdf'],
+
 }
 export const HME = (err, req, res, next) => {
     if (err) {
@@ -12,10 +12,11 @@ export const HME = (err, req, res, next) => {
     }
 };
 
-export function myMulter(customValidation = fileValidation.image) {
+export function myMulter(customValidation = fileValidation.type) {
+ 
     const storage = multer.diskStorage({})
     function fileFilter(req, file, cb) {
-
+console.log(file);
         if (customValidation.includes(file.mimetype)) {
             cb(null, true)
         } else {

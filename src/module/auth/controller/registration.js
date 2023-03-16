@@ -35,7 +35,7 @@ export const logIn = asyncHandler(async (req, res, next) => {
         if (compare) {
            
                 let token = jwt.sign({ id: user._id, isLoggedIn: true }, process.env.tokenSignature, { expiresIn: 60 * 60 * 24 * 2 })
-                res.status(200).json({ message: "welcome", token, id: user._id })
+                res.status(200).json({ message: "welcome", token})
             
         } else {
             next(new Error("in valid password", { cause: 400 }))
@@ -50,7 +50,7 @@ export const getUserData = asyncHandler(async (req, res, next) => {
     } else {
         const userData = await findById({ model: userModel, condition: { _id: decoded.id } })
         if (userData) {
-            res.status(200).json({message:'DONE',userData:userData})
+            res.status(200).json({message:'DONE',userData})
         } else {
             next(new Error("invalid data token", { cause: 404 }))
         }

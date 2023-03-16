@@ -31,9 +31,6 @@ export const findByIdAndDelete = async ({ model, condition = {} } = {}) => {
     const res = await model.findByIdAndDelete(condition)
     return res
 }
-
-
-
 // save...insert
 export const create = async ({ model, data } = {}) => {
     let newModel = new model(data);

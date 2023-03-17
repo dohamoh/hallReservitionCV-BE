@@ -53,3 +53,16 @@ export const deleteHall = asyncHandler(async (req, res, next) => {
         res.status(200).json({ message: "deleted" })
     }
 })
+
+export const getHalls = asyncHandler(async (req, res, next) => {
+  console.log('g');
+  const halls = await find({ model: hallModel })
+  console.log(halls);
+  if (halls) {
+      res.status(200).json({ message: "halls", halls })
+
+  } else {
+      next(new Error("halls not found", { cause: 404 }))
+
+  }
+})

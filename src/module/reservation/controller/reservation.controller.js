@@ -12,6 +12,5 @@ console.log(res.download(req.file.originalname));
     //     })
     //     console.log(secure_url, public_id );
     //     req.body.storeImage = secure_url
-    //     req.body.storeImageId = public_id
-    // }
+    //     req.body.storeImageId = public_id }
 })

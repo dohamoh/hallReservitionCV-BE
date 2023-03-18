@@ -14,7 +14,6 @@ export const HME = (err, req, res, next) => {
 export function myMulter(customValidation = fileValidation.type) {
     const storage = multer.diskStorage({})
     function fileFilter(req, file, cb) {
-        console.log(file);
         if (customValidation.includes(file.mimetype)) {
             cb(null, true)
         } else {

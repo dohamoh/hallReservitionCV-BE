@@ -6,12 +6,16 @@ export const roles = {
     Admin: "Admin"
 }
 export const auth = (acceptRoles = [roles.User]) => {
+
     return asyncHandler(async (req, res, next) => {
         const {authorization} = req.headers
+
         if (!authorization?.startsWith(process.env.BearerKey)) {
+
             next(new Error("In-valid Bearer Key", { cause: 400 }))
         } else {
             const token = authorization.split(process.env.BearerKey)[1]
+
             const decoded = jwt.verify(token, process.env.tokenSignature);
             if (!decoded?.id || !decoded?.isLoggedIn) {
                 next(new Error("In-valid token payload", { cause: 400 }))
@@ -20,6 +24,7 @@ export const auth = (acceptRoles = [roles.User]) => {
                 if (!user) {
                     next(new Error("Not register user", { cause: 404 }))
                 } else {
+           
                     if (acceptRoles.includes(user.role)) {
                         req.user = user
                         next()

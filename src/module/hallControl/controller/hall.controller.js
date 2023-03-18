@@ -13,7 +13,7 @@ export const addHall = asyncHandler(async (req, res, next) => {
     }
     let { hallImg, hallImgId, hallName, hallDesc, hallAttendees, } = req.body;
     let hallExist = await findOne({ model: hallModel, condition: { hallName } })
-    console.log(hallExist);
+  
     if (!hallExist) {
         const newHall = new hallModel({ hallName, hallDesc, hallImg, hallImgId, hallAttendees });
         if (newHall) {
@@ -55,9 +55,7 @@ export const deleteHall = asyncHandler(async (req, res, next) => {
 })
 
 export const getHalls = asyncHandler(async (req, res, next) => {
-  console.log('g');
   const halls = await find({ model: hallModel })
-  console.log(halls);
   if (halls) {
       res.status(200).json({ message: "halls", halls })
 

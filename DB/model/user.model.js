@@ -24,7 +24,12 @@ const userSchema = new Schema({
         type: String,
         required: [true, 'gender is required'],
     },
- 
+    role: {
+      type: String,
+      required: true,
+      default:'User',
+      enum: ['User','Admin']
+  },
     confirmEmail: {
         type: Boolean,
         default: 'false',
@@ -33,6 +38,10 @@ const userSchema = new Schema({
         type: Boolean,
         default: 'false',
     },
+    reservations: [{
+      type: Types.ObjectId,
+      ref: "Reservation",
+  }]
 }, {
     timestamps: true
 })

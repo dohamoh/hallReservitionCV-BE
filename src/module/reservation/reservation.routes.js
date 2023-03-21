@@ -12,9 +12,11 @@ router.get("/", (req, res) => {
     res.status(200).json({ message: 'reservation Module' })
 })
 
-router.post("/addReservation",auth(endPoints.users),myMulter(fileValidation.file).single("file"),HME, reservationControl.addReservation)
+router.post("/addReservation",auth(endPoints.all),myMulter(fileValidation.file).single("file"),HME, reservationControl.addReservation)
 router.get("/getAllReservation",auth(endPoints.admins), reservationControl.getAllReservation)
-router.delete("/cancelReservation/:_id",auth(endPoints.users), reservationControl.cancelReservation)
+router.patch("/UnapprovedReservation/:_id", reservationControl.UnapprovedReservation)
+router.patch("/ApprovedReservation/:_id",reservationControl.ApprovedReservation)
+router.patch("/OnHoldReservation/:_id",reservationControl.OnHoldReservation)
 
 
 export default router

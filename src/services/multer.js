@@ -12,9 +12,13 @@ export const HME = (err, req, res, next) => {
 };
 
 export function myMulter(customValidation = fileValidation.type) {
+
     const storage = multer.diskStorage({})
+
+
     function fileFilter(req, file, cb) {
         if (customValidation.includes(file.mimetype)) {
+
             cb(null, true)
         } else {
             cb('invalid format', false)

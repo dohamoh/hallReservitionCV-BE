@@ -4,7 +4,12 @@ import userModel from '../../../../DB/model/user.model.js';
 import { asyncHandler } from '../../../services/asyncHandler.js';
 import cloudinary from "../../../services/cloudinary.js";
 import { findById, findByIdAndDelete, findOneAndUpdate, findOne, find, findByIdAndUpdate, create, findOneAndDelete } from '../../../../DB/DBMethods.js';
+const reservationsPopulate = [
+  {
+      path: "hallId",
 
+  },
+];
 export const addReservation = asyncHandler(async (req, res, next) => {
   if (req.file) {
     let { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
@@ -35,18 +40,30 @@ export const addReservation = asyncHandler(async (req, res, next) => {
 })
 
 export const getAllReservation = asyncHandler(async (req, res, next) => {
-  let allReservation = await find({ model: reservationModel })
+  let allReservation = await find({ model: reservationModel,populate:[...reservationsPopulate] })
+
   if (allReservation) {
-    res.status(200).json({ allReservation })
+    res.status(200).json({ allReservations:allReservation })
   }
 })
-export const cancelReservation = asyncHandler(async (req, res, next) => {
+export const UnapprovedReservation = asyncHandler(async (req, res, next) => {
   let { _id } = req.params
-  let cancelReservation = await findByIdAndDelete({ model: reservationModel, condition: { _id } })
-  if (cancelReservation) {
-    let updateUserReservations = await findByIdAndUpdate({ model: userModel, condition: { _id: cancelReservation.createdBy }, data: { $pull: { reservations: _id }, }, options: { new: true } })
-    if (updateUserReservations) {
-      res.status(200).json({ message: 'canceled' })
-    }
+  let ApprovedReservation = await findByIdAndUpdate({ model: reservationModel, condition: { _id },data:{status:'Unapproved'},options:{new:true} })
+  if (ApprovedReservation) {
+      res.status(200).json({ message: 'Unapproved' })
+  }
+})
+export const ApprovedReservation = asyncHandler(async (req, res, next) => {
+  let { _id } = req.params
+  let ApprovedReservation = await findByIdAndUpdate({ model: reservationModel, condition: { _id },data:{status:'Approved'},options:{new:true} })
+  if (ApprovedReservation) {
+      res.status(200).json({ message: 'Approved' })
+  }
+})
+export const OnHoldReservation = asyncHandler(async (req, res, next) => {
+  let { _id } = req.params
+  let ApprovedReservation = await findByIdAndUpdate({ model: reservationModel, condition: { _id },data:{status:'On hold'},options:{new:true} })
+  if (ApprovedReservation) {
+      res.status(200).json({ message: 'on hold' })
   }
 })

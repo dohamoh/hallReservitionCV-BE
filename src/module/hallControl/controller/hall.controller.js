@@ -61,6 +61,5 @@ export const getHalls = asyncHandler(async (req, res, next) => {
 
   } else {
       next(new Error("halls not found", { cause: 404 }))
-
   }
 })

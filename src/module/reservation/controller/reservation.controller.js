@@ -6,6 +6,7 @@ import cloudinary from "../../../services/cloudinary.js";
 import { findById, findByIdAndDelete, findOneAndUpdate, findOne, find, findByIdAndUpdate, create, findOneAndDelete } from '../../../../DB/DBMethods.js';
 
 export const addReservation = asyncHandler(async (req, res, next) => {
+  console.log('g');
   if (req.file) {
     let { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
       folder: "reservation"

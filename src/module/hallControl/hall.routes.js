@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
 
 router.post("/addHall",myMulter(fileValidation.file).single("file"),HME ,hallControl.addHall)
 router.get("/getHalls",hallControl.getHalls)
-router.patch("/editHall/:hallId",myMulter(fileValidation.file).single("file"),HME, hallControl.updateHall)
+router.put("/editHall/:hallId",myMulter(fileValidation.file).single("file"),HME, hallControl.updateHall)
 router.delete("/deleteHall/:hallId", hallControl.deleteHall)
 
 

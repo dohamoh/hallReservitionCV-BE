@@ -37,9 +37,11 @@ export const updateHall = asyncHandler(async (req, res, next) => {
     let foundedHall = await findById({ model: hallModel, condition: hallId })
     if (foundedHall) {
         let updateHall = await findByIdAndUpdate({ model: hallModel, condition: hallId, data: { title:newName, desc:newDesc , hallImg:hallImg, hallImgId:hallImgId,attendeesNum: attendees } } = {})
-        // if (updateHall) {
-            res.status(200).json({ message: "hall Updated" })
-        // }
+        if (!updateHall) {
+            res.status(500).json({ message: "Couldn't Updated" })
+        }else{
+            res.status(200).json({ message: "Updated" })   
+        }
     } else {
         next(new Error("hall not found", { cause: 404 }));
     }

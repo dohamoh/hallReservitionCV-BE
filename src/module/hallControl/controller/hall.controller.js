@@ -2,7 +2,12 @@ import cloudinary from "../../../services/cloudinary.js";
 import hallModel from "../../../../DB/model/hall.model.js"
 import { asyncHandler } from '../../../services/asyncHandler.js';
 import { findById, findByIdAndDelete, findOneAndUpdate, findOne, find, findByIdAndUpdate, create, findOneAndDelete } from '../../../../DB/DBMethods.js';
+const reservationsPopulate = [
+  {
+      path: "reservations",
 
+  },
+];
 export const addHall = asyncHandler(async (req, res, next) => {
     if (req.file) {
         let { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
@@ -13,7 +18,7 @@ export const addHall = asyncHandler(async (req, res, next) => {
     }
     let { hallImg, hallImgId, hallName, hallDesc, hallAttendees, } = req.body;
     let hallExist = await findOne({ model: hallModel, condition: { hallName } })
-  
+
     if (!hallExist) {
         const newHall = new hallModel({ hallName, hallDesc, hallImg, hallImgId, hallAttendees });
         if (newHall) {
@@ -57,7 +62,7 @@ export const deleteHall = asyncHandler(async (req, res, next) => {
 })
 
 export const getHalls = asyncHandler(async (req, res, next) => {
-  const halls = await find({ model: hallModel })
+  const halls = await find({ model: hallModel,populate:[...reservationsPopulate] })
   if (halls) {
       res.status(200).json({ message: "halls", halls })
 

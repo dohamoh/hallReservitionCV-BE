@@ -5,7 +5,7 @@ const hallSchema = new Schema({
     hallDesc: {type:String},
     hallImg: {type:String},
     hallImgId: {type:String},
-    hallAttendees: {type:Number},
+    hallAttendees: {type:String},
     reservations: [{
       type: Types.ObjectId,
       ref: "Reservation",

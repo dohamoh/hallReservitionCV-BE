@@ -10,10 +10,14 @@ const reservationsPopulate = [
     },
 ];
 export const addHall = asyncHandler(async (req, res, next) => {
+  console.log(req.file);
+
     if (req.file) {
+      console.log(req.file.path);
         let { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
             folder: "hallImages"
         })
+        console.log(secure_url);
         req.body.hallImg = secure_url
         req.body.hallImgId = public_id
     }

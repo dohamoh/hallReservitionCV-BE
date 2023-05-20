@@ -18,7 +18,7 @@ app.use(cors({
 }));
 
 // app.use(cors("*"))
-const port = 3000
+const port = process.env.PORT
 app.use(express.json())
 
 app.use('/auth', indexRouter.authRouter)

@@ -10,14 +10,10 @@ const reservationsPopulate = [
     },
 ];
 export const addHall = asyncHandler(async (req, res, next) => {
-  console.log(req.file);
-
     if (req.file) {
-      console.log(req.file.path);
         let { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
             folder: "hallImages"
         })
-        console.log(secure_url);
         req.body.hallImg = secure_url
         req.body.hallImgId = public_id
     }
@@ -35,7 +31,7 @@ export const addHall = asyncHandler(async (req, res, next) => {
     }
 })
 export const updateHall = asyncHandler(async (req, res, next) => {
-
+    console.log(req.file);
     if (req.file) {
         let { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
             folder: "hallImages"
@@ -56,7 +52,6 @@ export const updateHall = asyncHandler(async (req, res, next) => {
         if (attendees == 'null') {
             attendees = foundedHall.hallAttendees
         }
-
         let updateHall = await findByIdAndUpdate({ model: hallModel, condition: hallId, data: { hallName: newName, hallDesc: newDesc, hallImg, hallImgId: hallImgId, hallAttendees: attendees } })
         if (!updateHall) {
             res.status(500).json({ message: "Couldn't Updated" })
@@ -78,7 +73,6 @@ export const deleteHall = asyncHandler(async (req, res, next) => {
         next(new Error("hall not found", { cause: 404 }));
     } else {
         let reservations = await find({model: reservationModel , condition: {hallId}})
-        console.log(reservations);
         for (let i = 0; i < reservations.length; i++) {
             const element = reservations[i];
             await findByIdAndDelete({model: reservationModel , condition: element._id})

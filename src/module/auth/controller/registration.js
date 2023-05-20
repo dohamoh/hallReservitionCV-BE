@@ -42,7 +42,7 @@ export const logIn = asyncHandler(async (req, res, next) => {
             res.status(200).json({ message: "welcome", token })
 
         } else {
-            next(new Error("in valid password", { cause: 400 }))
+            next(new Error("invalid password", { cause: 400 }))
         }
     }
 })
@@ -56,7 +56,6 @@ export const getUserData = asyncHandler(async (req, res, next) => {
     } else {
         let reservation = []
         const userData = await findById({ model: userModel, condition: { _id: decoded.id }, populate: [...userPopulate] })
-        console.log(userData.reservations);
         for (let i = 0; i < userData.reservations.length; i++) {
             const element = userData.reservations[i];
             reservation.push(element._id)

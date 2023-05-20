@@ -10,7 +10,14 @@ import connection from './DB/connection.js'
 import { globalError } from './src/services/asyncHandler.js'
 import cors  from "cors"
 
-app.use(cors("*"))
+app.use(cors({
+    origin: '*',
+    allowedHeaders: ['Content-Type', 'mode', 'Authorization', 'X-Requested-With'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true
+}));
+
+// app.use(cors("*"))
 const port = 3000
 app.use(express.json())
 

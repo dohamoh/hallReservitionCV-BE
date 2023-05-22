@@ -5,14 +5,26 @@ import { asyncHandler } from '../../../services/asyncHandler.js';
 import cloudinary from "../../../services/cloudinary.js";
 import { findById, findByIdAndDelete, findOneAndUpdate, findOne, find, findByIdAndUpdate, create, findOneAndDelete } from '../../../../DB/DBMethods.js';
 import hallModel from '../../../../DB/model/hall.model.js';
+import { sendEmail } from '../../../services/email.js'
+
 const reservationsPopulate = [
   {
     path: "hallId",
 
   },
 ];
-export const addReservation = asyncHandler(async (req, res, next) => {
+const userPopulate = [
+  {
+    path: "createdBy",
 
+  },
+];
+export const addReservation = asyncHandler(async (req, res, next) => {
+  let needs
+  if (req.body.whatDoYouNeed) {
+    needs = req.body.whatDoYouNeed.split(',')
+
+  }
   if (req.file) {
     let { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
       folder: "reservation"
@@ -21,9 +33,9 @@ export const addReservation = asyncHandler(async (req, res, next) => {
     req.body.reservationFileId = public_id
   }
 
-  let { AdministrationName, members, date, encounterType, hallId, encounterTime, whatDoYouNeed, reservationFile, reservationFileId } = req.body;
+  let { email, AdministrationName, members, date, encounterType, hallId, encounterTime, whatDoYouNeed, reservationFile, reservationFileId } = req.body;
 
-  const newReservation = new reservationModel({ AdministrationName, members, date, encounterType, hallId, encounterTime, whatDoYouNeed, reservationFile, reservationFileId, createdBy: req.user._id });
+  const newReservation = new reservationModel({ AdministrationName, members, date, encounterType, hallId, encounterTime, needs, reservationFile, reservationFileId, createdBy: req.user._id });
 
   const addReservation = await newReservation.save();
   if (addReservation) {
@@ -46,6 +58,40 @@ export const addReservation = asyncHandler(async (req, res, next) => {
         options: { new: true },
       });
       if (updatedHall) {
+
+        let message = `
+
+          <p>
+          اسم الادارة :
+          <span>${AdministrationName}</span>
+        </p>
+        <br>
+        <p>
+          التاريخ :
+          <span>${date}</span>
+        </p>
+        <br>
+        <p class="">
+          الوقت :
+          <span>${encounterTime}</span>
+        </p>
+        <br>
+        <p>
+          عدد الحاضرين :
+          <span>${members}</span>
+        </p>
+        <br>
+        <p>
+          المناسبة :
+          <span>${encounterType}</span>
+        </p>
+        <br>
+        <p>
+        جار مراجعة طلبك وسيتم الرد عليك في اقرب وقت
+        </p>
+
+                            `
+        let emailRes = await sendEmail(email, "Saudi Ministry of Education", message);
         res.status(200).json({ message: "Reservation added" })
       }
     }
@@ -70,6 +116,7 @@ export const UnapprovedReservation = asyncHandler(async (req, res, next) => {
 })
 export const ApprovedReservation = asyncHandler(async (req, res, next) => {
   let { _id } = req.params
+
   let ApprovedReservation = await findByIdAndUpdate({ model: reservationModel, condition: { _id }, data: { status: 'Approved' }, options: { new: true } })
   if (ApprovedReservation) {
     res.status(200).json({ message: 'Approved' })
@@ -110,3 +157,45 @@ export const CancelReservation = asyncHandler(async (req, res, next) => {
     }
   }
 })
+
+
+
+export const sendUnapproved = asyncHandler(async (req, res, next) => {
+  let { id } = req.body
+  let reservation = await findById({ model: reservationModel, condition: { _id: id }, populate: [...userPopulate] })
+  let email = reservation.createdBy.email
+
+
+  let message = `Your Reservation Is Unapproved`
+  // let message = `please verify your email <a href="${link}" > here </a>
+  //                         <br/>
+  //                         to resend please click <a href="${refreshLink}" > here </a>
+  //                         `
+  let emailRes = await sendEmail(email, "Saudi Ministry of Education", message);
+  if (emailRes.accepted.length) {
+
+    res.status(201).json({ message: "sended" })
+  } else {
+    next(new Error("invalid email", { cause: 404 }))
+  }
+})
+export const sendApproved = asyncHandler(async (req, res, next) => {
+  let { id } = req.body
+  let reservation = await findById({ model: reservationModel, condition: { _id: id }, populate: [...userPopulate] })
+  let email = reservation.createdBy.email
+
+  let message = `Your Reservation Is Approved`
+
+  // let message = `please verify your email <a href="${link}" > here </a>
+  //                         <br/>
+  //                         to resend please click <a href="${refreshLink}" > here </a>
+  //                         `
+  let emailRes = await sendEmail(email, "Saudi Ministry of Education", message);
+  if (emailRes.accepted.length) {
+
+    res.status(201).json({ message: "sended" })
+  } else {
+    next(new Error("invalid email", { cause: 404 }))
+  }
+})
+

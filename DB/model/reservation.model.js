@@ -56,7 +56,9 @@ createdBy: {
   type: Types.ObjectId,
   ref: "User"
 },
-
+needs: {
+  type: [String],
+},
 }, {
   timestamps: true
 })

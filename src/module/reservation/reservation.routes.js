@@ -14,10 +14,13 @@ router.get("/", (req, res) => {
 
 router.post("/addReservation",auth(endPoints.all),myMulter(fileValidation.file).single("file"),HME, reservationControl.addReservation)
 router.get("/getAllReservation",auth(endPoints.admins), reservationControl.getAllReservation)
-router.patch("/UnapprovedReservation/:_id", reservationControl.UnapprovedReservation)
+router.put("/UnapprovedReservation/:_id", reservationControl.UnapprovedReservation)
 router.delete("/CancelReservation/:_id", reservationControl.CancelReservation)
-router.patch("/ApprovedReservation/:_id",reservationControl.ApprovedReservation)
-router.patch("/OnHoldReservation/:_id",reservationControl.OnHoldReservation)
+router.put("/ApprovedReservation/:_id",reservationControl.ApprovedReservation)
+router.put("/OnHoldReservation/:_id",reservationControl.OnHoldReservation)
+
+router.post("/sendUnapproved",reservationControl.sendUnapproved)
+router.post("/sendApproved",reservationControl.sendApproved)
 
 
 export default router

@@ -32,7 +32,7 @@ export const addHall = asyncHandler(async (req, res, next) => {
     }
 })
 export const updateHall = asyncHandler(async (req, res, next) => {
-    console.log(req.file);
+
     if (req.file) {
         let { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
             folder: "hallImages"

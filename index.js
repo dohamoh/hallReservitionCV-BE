@@ -25,7 +25,7 @@ app.use('/auth', indexRouter.authRouter)
 app.use('/hall', indexRouter.hallRouter)
 app.use('/reservation', indexRouter.reservationRouter)
 
-app.get('/', (req, res) => res.send('hall reversion!'))
+app.get('/', (req, res) => res.send('hall reversion1!'))
 app.use('*', (req, res, next) => {
     res.send("In-valid Route pls check url or method")
 })

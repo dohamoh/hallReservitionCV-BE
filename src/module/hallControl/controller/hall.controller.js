@@ -27,7 +27,8 @@ export const addHall = asyncHandler(async (req, res, next) => {
             res.status(200).json({ message: "hall added" })
         }
     } else {
-        next(new Error("hall already exists", { cause: 404 }));
+        // next(new Error("hall already exists", { cause: 404 }));
+        res.status(404).json({ message: "hall already exists" })
     }
 })
 export const updateHall = asyncHandler(async (req, res, next) => {
@@ -63,14 +64,16 @@ export const updateHall = asyncHandler(async (req, res, next) => {
             res.status(200).json({ message: "Updated" })
         }
     } else {
-        next(new Error("hall not found", { cause: 404 }));
+        // next(new Error("hall not found", { cause: 404 }));
+        res.status(404).json({ message: "hall not found" })
     }
 })
 export const deleteHall = asyncHandler(async (req, res, next) => {
     let { hallId } = req.params;
     let hall = await findByIdAndDelete({ model: hallModel, condition: hallId });
     if (!hall) {
-        next(new Error("hall not found", { cause: 404 }));
+        // next(new Error("hall not found", { cause: 404 }));
+        res.status(404).json({ message: "hall not found" })
     } else {
         let reservations = await find({model: reservationModel , condition: {hallId}})
         for (let i = 0; i < reservations.length; i++) {
@@ -87,6 +90,7 @@ export const getHalls = asyncHandler(async (req, res, next) => {
         res.status(200).json({ message: "halls", halls })
 
     } else {
-        next(new Error("halls not found", { cause: 404 }))
+        // next(new Error("halls not found", { cause: 404 }))
+        res.status(404).json({ message: "halls not found" })
     }
 })

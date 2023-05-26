@@ -17,14 +17,17 @@ export const signUp = asyncHandler(async (req, res, next) => {
     const { managementName, email, password, outMinistry, gender, phone } = req.body;
     const user = await findOne({ model: userModel, condition: { email }, select: "email" })
     if (user) {
-        next(new Error("this email already register", { cause: 409 }))
+        // next(new Error("this email already register", { cause: 409 }))
+        res.status(409).json({ message: "This email already register" })
     } else {
         let addUser = new userModel({ managementName, email, password, outMinistry, gender, phone });
         if (addUser) {
             let savedUser = await addUser.save()
             res.status(201).json({ message: "added successfully", savedUser })
         } else {
-            next(new Error("invalid email", { cause: 404 }))
+            // next(new Error("invalid email", { cause: 404 }))
+            res.status(404).json({ message: "Invalid email" })
+
         }
     }
 })
@@ -33,7 +36,8 @@ export const logIn = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
     const user = await findOne({ model: userModel, condition: { email } })
     if (!user) {
-        next(new Error("You have to register first", { cause: 404 }))
+        // next(new Error("You have to register first", { cause: 404 }))
+        res.status(404).json({ message: "You have to register first" })
     } else {
         let compare = bcrypt.compareSync(password, user.password, parseInt(process.env.SALTROUND))
         if (compare) {
@@ -42,7 +46,8 @@ export const logIn = asyncHandler(async (req, res, next) => {
             res.status(200).json({ message: "welcome", token })
 
         } else {
-            next(new Error("invalid password", { cause: 400 }))
+            // next(new Error("invalid password", { cause: 400 }))
+            res.status(400).json({ message: "invalid password" })
         }
     }
 })
@@ -52,7 +57,8 @@ export const getUserData = asyncHandler(async (req, res, next) => {
     let decoded = jwt.verify(token, process.env.tokenSignature)
 
     if (!decoded && !decoded.id) {
-        next(new Error("invalid token data", { cause: 400 }))
+        // next(new Error("invalid token data", { cause: 400 }))
+        res.status(400).json({ message: "invalid token data" })
     } else {
         let reservation = []
         const userData = await findById({ model: userModel, condition: { _id: decoded.id }, populate: [...userPopulate] })
@@ -67,7 +73,8 @@ export const getUserData = asyncHandler(async (req, res, next) => {
 
             }
         } else {
-            next(new Error("invalid data token", { cause: 404 }))
+            // next(new Error("invalid data token", { cause: 404 }))
+            res.status(400).json({ message: "invalid token data" })
         }
     }
 })

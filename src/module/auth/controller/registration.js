@@ -14,20 +14,18 @@ const userPopulate = [
 ];
 
 export const signUp = asyncHandler(async (req, res, next) => {
-    const { managementName, email, password, outMinistry, gender, phone } = req.body;
+    const {email, password, gender, phone } = req.body;
     const user = await findOne({ model: userModel, condition: { email }, select: "email" })
     if (user) {
         // next(new Error("this email already register", { cause: 409 }))
         res.status(409).json({ message: "This email already register" })
     } else {
-        let addUser = new userModel({ managementName, email, password, outMinistry, gender, phone });
+        let addUser = new userModel({ email, password, gender, phone });
         if (addUser) {
             let savedUser = await addUser.save()
             res.status(201).json({ message: "added successfully", savedUser })
         } else {
-            // next(new Error("invalid email", { cause: 404 }))
             res.status(404).json({ message: "Invalid email" })
-
         }
     }
 })

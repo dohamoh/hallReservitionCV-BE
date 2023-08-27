@@ -2,11 +2,7 @@ import { Schema, model, Types } from "mongoose";
 import bcrypt from 'bcrypt'
 
 const userSchema = new Schema({
-    managementName: {
-        type: String,
-        min: [2, 'minimum length 2 char'],
-        max: [20, 'max length 20 char']
-    },
+ 
     email: {
         type: String,
         required: [true, 'userName is required'],
@@ -31,10 +27,6 @@ const userSchema = new Schema({
       enum: ['User','Admin']
   },
     confirmEmail: {
-        type: Boolean,
-        default: 'false',
-    },
-    outMinistry: {
         type: Boolean,
         default: 'false',
     },
